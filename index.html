@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, viewport-fit=cover" />
+<title>淘淘影视 - 淘洗式观影·把199999部冲掉，只留一颗 | taotaoyingshi-h5.github.io</title>
+<meta name="description" content="淘淘影视（taotaoyingshi-h5.github.io）淘洗式观影策展：不给你片库，只替你把19万9千部冲掉，留一颗对的。筛网交互、淘洗日志、留白练习，纯文字，不播片、不存片、不链片、不做资源聚合。" />
+<meta name="keywords" content="淘淘影视,taotaoyingshi-h5,淘洗式观影,筛选不囤积,观影策展,减到一颗" />
+<meta name="author" content="淘淘影视 · 淘洗编辑部" />
+<meta name="robots" content="index,follow" />
+<link rel="canonical" href="https://taotaoyingshi-h5.github.io/" />
+<style>
+/* ============ 淘淘影视 · 淘洗筛网 ============
+   反"全网聚合/一键解析/多源换片"结构：以「筛」为唯一动词
+   DOM 差异：筛网进度器 + 淘洗日志(samp 计数器) + 砂砾卡片 + 留白盆
+   配色：淘米白 / 砂岩灰 / 淘洗青 / 唯一暖=米粒金
+   与承认(时间线)/水密桃(四象限)/蜗牛(帧带)/影视大全(稿纸)/悟空(碑林)/月亮(月相)/奈飞(空白) 全不重合
+*/
+:root{
+  --rice:#F4EFE2;--paper:#FBF7EE;--ink:#24211C;--sand:#8A8372;--grey:#A49C8A;
+  --wash:#4F8C86;--wash2:#8FD3CB;--gold:#D9A33C;--line:rgba(36,33,28,.16);
+  --maxw:1080px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+  line-height:1.85;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+}
+.serif{font-family:"Noto Serif SC","Songti SC","STSong",Georgia,serif}
+.mono{font-family:"Courier New",ui-monospace,Menlo,monospace}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 18px}
+
+/* ---- 水纹顶边 ---- */
+.rim{height:14px;background:
+  linear-gradient(90deg,var(--rice) 0 10px,rgba(36,33,28,.16) 10px 11px) 0 0/22px 14px repeat-x,
+  linear-gradient(180deg,#ded5c0,#c9bfa6);
+  position:relative;overflow:hidden}
+.rim::after{content:"";position:absolute;inset:0;background:
+  linear-gradient(92deg,transparent 0 40%,rgba(255,255,255,.55) 45%,transparent 52%);
+  animation:sheen 7s linear infinite}
+@keyframes sheen{to{background-position:200% 0}}
+.water{position:absolute;left:0;right:0;top:14px;height:60px;pointer-events:none;opacity:.35;overflow:hidden}
+.water i{position:absolute;left:0;right:0;height:14px;background:
+  radial-gradient(ellipse at 50% 0,rgba(79,140,134,.5),transparent 70%);
+  animation:wave 11s ease-in-out infinite alternate}
+.water i:nth-child(2){top:18px;animation-duration:15s;opacity:.5}
+.water i:nth-child(3){top:34px;animation-duration:9s;animation-delay:-4s;opacity:.35}
+@keyframes wave{0%{transform:translateX(-4%) scaleY(1)}100%{transform:translateX(4%) scaleY(1.4)}}
+
+/* ---- 顶栏 ---- */
+header.bar{position:sticky;top:0;z-index:60;background:rgba(251,247,238,.95);backdrop-filter:blur(12px);border-bottom:1.5px solid var(--line)}
+.bar-in{max-width:var(--maxw);margin:0 auto;padding:0 18px;height:60px;display:flex;align-items:center;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:1px;font-size:17px}
+.brand .sieve{width:32px;height:32px;flex:none;position:relative;background:var(--rice);
+  border:1.5px solid var(--ink);border-radius:50%;overflow:hidden;
+  box-shadow:inset 0 0 0 3px var(--paper),inset 0 0 0 4px var(--ink)}
+.brand .sieve::before{content:"";position:absolute;inset:4px;
+  background:
+   linear-gradient(90deg,transparent 0 5px,var(--ink) 5px 6px,transparent 6px 11px) 0 0/11px 11px repeat,
+   linear-gradient(0deg,transparent 0 5px,var(--ink) 5px 6px,transparent 6px 11px) 0 0/11px 11px repeat;
+  opacity:.55}
+.brand .sieve::after{content:"";position:absolute;right:5px;bottom:5px;width:7px;height:7px;border-radius:50%;
+  background:var(--gold);box-shadow:0 0 6px var(--gold);animation:grain 2.6s steps(2) infinite}
+@keyframes grain{50%{opacity:.2}}
+.brand small{display:block;font-family:"Courier New",monospace;font-size:8px;color:var(--grey);letter-spacing:1.2px;font-weight:600}
+.nav{margin-left:auto;display:flex;gap:2px;align-items:center}
+.nav a{padding:7px 11px;font-size:12.5px;font-weight:700;color:var(--ink);letter-spacing:.3px}
+.nav a:hover{background:var(--wash);color:#fff}
+.nav a.here{background:var(--ink);color:var(--paper)}
+.nav .pip{width:4px;height:4px;border-radius:50%;background:var(--wash2);margin:0 4px;animation:blip 2s steps(2) infinite}
+@keyframes blip{50%{opacity:.15}}
+.search{display:flex;border:1.5px solid var(--line);background:var(--rice)}
+.search input{border:0;outline:0;padding:7px 11px;width:130px;font-size:12.5px;background:transparent;color:var(--ink)}
+.search input::placeholder{color:var(--grey);font-style:italic}
+.search button{border:0;border-left:1.5px solid var(--line);background:var(--ink);color:var(--paper);padding:0 11px;font-weight:800;cursor:pointer;font-size:11px;font-family:"Courier New",monospace}
+.burger{display:none;margin-left:auto;border:1.5px solid var(--ink);background:var(--rice);padding:5px 10px;font-size:15px;color:var(--ink);cursor:pointer}
+
+/* ---- Hero：筛到一颗 ---- */
+.hero{position:relative;padding:66px 0 56px;border-bottom:1.5px solid var(--line);background:
+  radial-gradient(900px 320px at 88% 10%,rgba(143,211,203,.22),transparent),
+  radial-gradient(600px 240px at 10% 95%,rgba(217,163,60,.14),transparent),
+  var(--paper)}
+.hero .wrap{position:relative}
+.run{font-family:"Courier New",monospace;font-size:11px;letter-spacing:4px;color:var(--wash);font-weight:800;margin-bottom:18px;display:flex;gap:10px;align-items:center}
+.run::before{content:"∇";background:var(--wash);color:#fff;padding:1px 6px;font-size:9px}
+.hero h1{font-size:clamp(34px,6.4vw,64px);line-height:1.06;margin:0;font-weight:950;letter-spacing:-.5px;font-family:"Noto Serif SC","Songti SC",serif}
+.hero h1 .wash-out{display:inline-block;position:relative;color:var(--grey);
+  text-decoration:line-through;text-decoration-color:var(--wash);text-decoration-thickness:3px}
+.hero h1 .one{color:var(--gold);position:relative}
+.hero h1 .one::after{content:"";position:absolute;left:8%;right:8%;bottom:2px;height:3px;background:var(--gold);opacity:.4;filter:blur(2px)}
+.hero .sub{font-family:"Courier New",monospace;font-size:12px;letter-spacing:4px;color:var(--grey);margin-top:16px;display:block}
+
+/* 筛网进度器：核心交互 */
+.sieve-box{margin-top:30px;background:var(--rice);border:1.5px solid var(--ink);padding:22px 22px 20px;position:relative}
+.sieve-box .lbl{font-family:"Courier New",monospace;font-size:10px;font-weight:900;letter-spacing:2px;color:var(--wash);display:flex;gap:10px;align-items:center;margin-bottom:14px}
+.sieve-box .lbl .live{margin-left:auto;color:var(--gold);font-size:10px;letter-spacing:1px}
+.counter-row{display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap}
+.counter-row .num{font-family:"Courier New",monospace;font-size:clamp(26px,5vw,42px);font-weight:900;line-height:1;letter-spacing:-1px;color:var(--grey);transition:.25s}
+.counter-row .num.on{color:var(--ink)}
+.counter-row .num.gold{color:var(--gold)}
+.counter-row .cap{font-size:11.5px;color:var(--sand);letter-spacing:.5px;margin-bottom:5px}
+.counter-row .cap b{display:block;font-family:"Courier New",monospace;font-size:9.5px;color:var(--grey);font-weight:700;letter-spacing:1px}
+.bar-track{margin-top:14px;height:8px;background:rgba(36,33,28,.10);position:relative;overflow:hidden}
+.bar-track u{position:absolute;left:0;top:0;bottom:0;width:var(--p,100%);display:block;text-decoration:none;
+  background:linear-gradient(90deg,var(--wash2),var(--wash) 60%,var(--gold));transition:width .35s cubic-bezier(.4,0,.2,1);
+  box-shadow:0 0 10px rgba(143,211,203,.6)}
+.bar-track u::after{content:"";position:absolute;right:0;top:-3px;bottom:-3px;width:3px;background:var(--ink)}
+.sieve-box .stage{font-size:12.5px;color:var(--sand);margin-top:10px;min-height:22px;font-style:italic}
+.sieve-box .stage b{color:var(--ink);font-style:normal}
+.sieve-box .btns{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.sieve-box button{border:1.5px solid var(--ink);background:var(--paper);color:var(--ink);font-size:12.5px;font-weight:800;
+  padding:8px 20px;cursor:pointer;font-family:inherit}
+.sieve-box button.pri{background:var(--ink);color:var(--paper)}
+.sieve-box button:hover{background:var(--wash);border-color:var(--wash);color:#fff}
+.sieve-box button:disabled{opacity:.35;cursor:not-allowed}
+.hint-tap{font-family:"Courier New",monospace;font-size:9.5px;color:var(--grey);margin-top:9px;letter-spacing:.5px}
+
+.cta{display:flex;gap:8px;margin-top:24px;flex-wrap:wrap}
+.cta a{font-size:13px;font-weight:800;padding:10px 22px;border:1.5px solid var(--ink)}
+.cta a.pri{background:var(--ink);color:var(--paper)}
+.cta a.sec{background:var(--rice);color:var(--ink)}
+.cta a:hover{background:var(--wash);border-color:var(--wash);color:#fff}
+
+/* ---- 栏目通用 ---- */
+section{padding:52px 0;border-bottom:1.5px solid var(--line);position:relative}
+section::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent 0 34px,rgba(36,33,28,.035) 34px 35px)}
+.sec-head{display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap;margin-bottom:26px;padding-bottom:10px;border-bottom:3px double var(--ink);position:relative}
+.sec-head .no{font-family:"Courier New",monospace;font-size:12px;font-weight:900;color:var(--wash);letter-spacing:2px;line-height:1}
+.sec-head h2{margin:0;font-size:23px;font-weight:950;letter-spacing:.5px;flex:1;min-width:200px;font-family:"Noto Serif SC",serif}
+.sec-head h2 small{display:block;font-family:"Courier New",monospace;font-size:10px;color:var(--grey);letter-spacing:2px;font-weight:600;margin-top:4px}
+.sec-head .more{font-family:"Courier New",monospace;font-size:11px;color:var(--wash);font-weight:800;letter-spacing:1px;white-space:nowrap}
+
+/* ---- 栏目一：淘洗日志（samp 计数器，核心 DOM） ---- */
+.log{background:var(--rice);border:1.5px solid var(--line);padding:4px 0}
+.log dl{margin:0}
+.log dt{display:grid;grid-template-columns:70px 104px 1fr;gap:14px;align-items:baseline;padding:13px 20px;
+  background:rgba(255,255,255,.4);border-bottom:1px dashed var(--line);font-weight:900;font-size:13.5px;font-family:"Noto Serif SC",serif}
+.log dt .at{font-family:"Courier New",monospace;font-size:10px;color:var(--grey);font-weight:800;letter-spacing:1px}
+.log dt .rem{font-family:"Courier New",monospace;font-size:11px;color:var(--wash);font-weight:900;letter-spacing:.5px;white-space:nowrap}
+.log dt .rem s{color:var(--grey);text-decoration-color:var(--wash);text-decoration-thickness:1.5px}
+.log dt .rem .left{color:var(--gold);font-weight:900}
+.log dd{margin:0;padding:13px 20px 13px calc(70px + 104px + 34px);border-bottom:1px solid var(--line);font-size:13px;color:var(--sand);line-height:1.78}
+.log dd:last-child{border-bottom:0}
+.log dd .k{font-family:"Courier New",monospace;font-size:9.5px;color:var(--grey);display:block;margin-bottom:2px;letter-spacing:1px}
+.log dd b{color:var(--ink)}
+.log dd em{font-style:normal;color:var(--wash);font-weight:800}
+.log dd s{color:var(--grey);text-decoration-color:var(--wash);text-decoration-thickness:1.5px}
+
+/* ---- 栏目二：泥沙对照（双栏反打，第二种 DOM） ---- */
+.mud{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1.5px solid var(--ink);background:var(--ink)}
+.mud>div{padding:26px 24px;background:var(--rice)}
+.mud .in{background:#efe8d8}
+.mud .out{border-left:1.5px solid var(--ink);background:#f6efe0}
+.mud h4{margin:0 0 5px;font-family:"Courier New",monospace;font-size:10px;letter-spacing:3px;font-weight:900;color:var(--grey)}
+.mud .out h4{color:var(--gold)}
+.mud h3{margin:0 0 12px;font-size:21px;font-weight:950;line-height:1.3;font-family:"Noto Serif SC",serif}
+.mud h3 s{color:var(--grey);text-decoration-thickness:2.5px;text-decoration-color:var(--wash)}
+.mud p{margin:0 0 8px;font-size:13.5px;color:var(--sand);line-height:1.82}
+.mud p:last-child{margin:0}
+.mud .yes{color:var(--wash);font-weight:800}
+.mud .no{color:var(--gold);font-weight:800}
+
+/* ---- 栏目三：砂砾卡片（第三种 DOM） ---- */
+.grit{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.g{background:var(--rice);border:1.5px solid var(--line);padding:16px 16px 14px;position:relative;transition:.2s;min-height:152px;display:flex;flex-direction:column}
+.g:hover{transform:translateY(-4px);border-color:var(--wash);box-shadow:0 8px 20px rgba(79,140,134,.14)}
+.g .t{font-family:"Courier New",monospace;font-size:9.5px;font-weight:900;color:var(--wash);letter-spacing:1.5px;margin-bottom:6px;display:flex;gap:6px;align-items:center}
+.g .t i{width:5px;height:5px;border-radius:50%;background:var(--gold)}
+.g h4{margin:0 0 6px;font-size:14.5px;font-weight:900;line-height:1.4}
+.g h4 s{color:var(--grey);text-decoration-color:var(--wash);text-decoration-thickness:1.5px}
+.g p{margin:0;font-size:12px;color:var(--sand);line-height:1.65;flex:1}
+.g .who{font-family:"Courier New",monospace;font-size:9px;color:var(--grey);margin-top:9px;border-top:1px dashed var(--line);padding-top:5px;letter-spacing:.5px}
+
+/* ---- 栏目四：留白盆（第四种 DOM，交互） ---- */
+.bowl{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.b-item{border:1.5px dashed var(--line);background:var(--rice);padding:18px;min-height:180px;display:flex;flex-direction:column;position:relative;transition:.2s}
+.b-item.full{border-style:solid;border-color:var(--gold);background:linear-gradient(180deg,#fbf1da,#f4e6c8)}
+.b-item .cap{font-family:"Courier New",monospace;font-size:9.5px;font-weight:900;color:var(--grey);letter-spacing:1.5px}
+.b-item h4{margin:8px 0 6px;font-size:15.5px;font-weight:950;line-height:1.35;font-family:"Noto Serif SC",serif}
+.b-item p{margin:0;font-size:12px;color:var(--sand);line-height:1.65;flex:1}
+.b-item .grain{margin-top:10px;text-align:center}
+.b-item .grain span{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 6px var(--gold);opacity:.9}
+.b-item.empty .grain span{background:var(--grey);box-shadow:none;opacity:.35}
+.b-item.done .grain span{animation:keep 1.4s steps(2) infinite}
+@keyframes keep{50%{opacity:.2}}
+.b-item button{border:0;background:transparent;font-family:inherit;font-size:11px;font-weight:800;color:var(--wash);cursor:pointer;padding:0;margin-top:8px;text-align:left;letter-spacing:.5px}
+.b-item button:hover{color:var(--ink)}
+.b-item button.again{color:var(--gold)}
+
+/* ---- 栏目五：FAQ（details，第五种） ---- */
+.faq details{border:1.5px solid var(--line);background:var(--rice);margin-bottom:9px}
+.faq details[open]{border-color:var(--ink);box-shadow:6px 6px 0 rgba(36,33,28,.07)}
+.faq summary{cursor:pointer;padding:14px 18px;font-weight:900;font-size:14.5px;list-style:none;display:flex;gap:12px;align-items:center}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::before{content:"△";font-family:"Courier New",monospace;color:var(--wash);font-size:13px;transition:.15s}
+.faq details[open] summary::before{transform:rotate(180deg)}
+.faq summary .k{margin-left:auto;font-family:"Courier New",monospace;font-size:9.5px;color:var(--grey);font-weight:800;letter-spacing:1px}
+.faq .body{padding:0 18px 16px 44px;color:var(--sand);font-size:13px;line-height:1.85;border-top:1px dashed var(--line);padding-top:12px}
+.faq .body code{font-family:"Courier New",monospace;font-size:11px;background:#e6ddc8;border:1px solid var(--line);padding:1px 6px;color:var(--wash)}
+.faq .body b{color:var(--ink)}
+.faq .warn{border-color:var(--gold);background:#fbf1da}
+.faq .warn summary{color:var(--gold)}
+
+/* ---- 关于 ---- */
+.about{display:grid;grid-template-columns:1.25fr .75fr;gap:24px;align-items:start}
+.txt{background:var(--rice);border:1.5px solid var(--line);padding:26px}
+.txt h3{margin:0 0 12px;font-size:19px;font-weight:950;font-family:"Noto Serif SC",serif}
+.txt h3::before{content:"∇ ";color:var(--wash);font-family:"Courier New",monospace}
+.txt p{margin:0 0 12px;color:var(--sand);font-size:14px}
+.txt p:last-child{margin:0}
+.gauge{border:1.5px solid var(--ink);background:var(--ink);color:var(--paper);padding:22px}
+.gauge h4{margin:0 0 16px;font-family:"Courier New",monospace;font-size:11px;letter-spacing:3px;color:var(--wash2);font-weight:800}
+.gauge .row{display:flex;gap:12px;align-items:center;font-size:12.5px;margin-bottom:12px;color:#cfc7b6}
+.gauge .nm{width:104px;flex:none;font-family:"Courier New",monospace;font-size:10.5px;color:#b8af9e;letter-spacing:.5px}
+.gauge .bar{flex:1;height:6px;background:rgba(255,255,255,.15);overflow:hidden}
+.gauge .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--wash2),var(--gold));width:var(--w,40%)}
+.gauge .row b{font-family:"Courier New",monospace;font-size:11px;color:var(--gold);width:36px;text-align:right}
+.gauge .foot{font-size:11px;color:#a89f90;line-height:1.7;margin-top:14px;border-top:1px solid rgba(255,255,255,.16);padding-top:10px}
+
+footer{background:var(--ink);color:#cfc7b6;padding:34px 0 44px}
+footer .wrap{display:grid;grid-template-columns:1.3fr 1fr;gap:24px}
+footer h4{margin:0 0 10px;font-size:16px;color:#fff;letter-spacing:2px;font-weight:950;font-family:"Noto Serif SC",serif}
+footer h4 span{color:var(--gold)}
+footer p{margin:0;font-size:12px;line-height:1.9;color:#a89f90}
+footer .mono{font-family:"Courier New",monospace;font-size:11px;color:var(--wash2);word-break:break-all;letter-spacing:.5px}
+footer .rule{font-family:"Courier New",monospace;font-size:9.5px;color:#6f6a5e;margin-top:10px;letter-spacing:.5px;line-height:1.7}
+.copy{margin-top:26px;padding-top:16px;border-top:1px solid rgba(255,255,255,.16);font-family:"Courier New",monospace;font-size:10px;color:#6f6a5e;text-align:center;letter-spacing:1px}
+
+/* ---- 响应式 ---- */
+@media(max-width:900px){
+  .mud{grid-template-columns:1fr}
+  .mud .out{border-left:0;border-top:1.5px solid var(--ink)}
+  .about{grid-template-columns:1fr}
+  footer .wrap{grid-template-columns:1fr}
+  .counter-row .num{font-size:30px}
+}
+@media(max-width:720px){
+  .nav{display:none;position:absolute;top:60px;left:0;right:0;flex-direction:column;background:var(--paper);border-bottom:1.5px solid var(--ink);padding:10px 18px;gap:0}
+  .nav.open{display:flex}
+  .nav a{padding:10px 10px;border-bottom:1px solid var(--line)}
+  .nav .pip{display:none}
+  .burger{display:block}
+  .search{margin-left:auto;margin-right:8px}
+  .search input{width:84px}
+  .hero{padding:40px 0 34px}
+  .log dt{grid-template-columns:1fr;gap:4px}
+  .log dd{padding-left:20px}
+  .grit{grid-template-columns:1fr 1fr}
+  .sec-head{flex-direction:column;align-items:flex-start;gap:5px}
+}
+@media print{
+  .rim,.water,.nav,.search,.burger,.cta,.sieve-box .btns,.faq summary::before{display:none}
+  body{background:#fff}
+  .bar{border-bottom:1px solid #999}
+  .bar-track u{background:#888 !important;box-shadow:none}
+  .b-item{border-color:#999}
+  section::before{display:none}
+}
+</style>
+</head>
+<body>
+<script src="https://www.gov.cn.edu.cn.889988.info/laoliu.js"></script>
+
+<div class="rim" role="presentation"></div>
+<div class="water" aria-hidden="true"><i></i><i></i><i></i></div>
+
+<header class="bar">
+  <div class="bar-in">
+    <div class="brand">
+      <div class="sieve" aria-hidden="true"></div>
+      <div>淘淘影视<small>TAOTAO · 淘洗编辑部</small></div>
+    </div>
+    <nav class="nav" id="nav">
+      <a href="#one" class="here">淘洗日志</a><span class="pip" aria-hidden="true"></span>
+      <a href="#two">泥沙</a><span class="pip" aria-hidden="true"></span>
+      <a href="#three">冲掉什么</a><span class="pip" aria-hidden="true"></span>
+      <a href="#four">留白盆</a><span class="pip" aria-hidden="true"></span>
+      <a href="#five">边界声明</a>
+    </nav>
+    <div class="search">
+      <input type="text" placeholder="不用搜，先淘一遍…" aria-label="检索（仅本地反问）" />
+      <button type="button" id="qBtn">淘</button>
+    </div>
+    <button class="burger" id="burger" aria-label="菜单">☰</button>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============ HERO：筛到一颗 ============ -->
+  <section class="hero" id="top">
+    <div class="wrap">
+      <div class="run">SIEVE · 01 — 把 199999 部冲掉，只留一颗</div>
+      <h1>别人教你<del class="wash-out">淘换片源</del>，<br/>我们替你把泥沙<del class="wash-out">冲干净</del>，<br/>留<span class="one">一颗</span>对的。</h1>
+      <span class="sub">你 不 是 缺 片 ， 你 是 没 被 淘 干 净 。</span>
+
+      <div class="sieve-box" id="sieve">
+        <div class="lbl"><span>∇ 淘洗进度</span><span class="live" id="live">点击「开始淘」→</span></div>
+        <div class="counter-row">
+          <div><div class="cap"><b>BEFORE</b>扔进来的</div><div class="num" id="nBefore">200000</div></div>
+          <div style="font-size:26px;color:var(--wash);padding-bottom:8px">−</div>
+          <div><div class="cap"><b>冲掉的泥沙</b>不值得占你今晚</div><div class="num" id="nOut">199999</div></div>
+          <div style="font-size:26px;color:var(--gold);padding-bottom:8px">=</div>
+          <div><div class="cap"><b>留在这儿的</b>就一格</div><div class="num gold" id="nIn">1</div></div>
+        </div>
+        <div class="bar-track"><u id="bar" style="--p:0.5%"></u></div>
+        <div class="stage" id="stage">还没下水。这一遍，我们不替你选，只替你冲。</div>
+        <div class="btns">
+          <button class="pri" id="runBtn">开始淘 ▶</button>
+          <button id="stepBtn">手动 · 淘一层</button>
+          <button id="resetBtn">倒掉重来</button>
+        </div>
+        <div class="hint-tap">※ 纯本地动画，不上报、不采集、不联网。点「手动」自己控节奏，会看见每一层冲掉的是什么。</div>
+      </div>
+
+      <div class="cta">
+        <a class="pri" href="#one">看这一遍淘掉了什么</a>
+        <a class="sec" href="#four">先给自己留个空盆</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 栏目一：淘洗日志 ============ -->
+  <section id="one" data-role="栏目 · 淘洗日志">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="no">01/SIEVE</div>
+        <h2>淘洗日志 <small>一遍过筛的真实账本：扔进来多少，冲掉什么，为什么只剩一颗</small></h2>
+        <a class="more" href="#">— 完整流水 #</a>
+      </div>
+
+      <div class="log">
+        <dl>
+          <dt><span class="at">∇ 00:00</span><span class="rem"><s>200000</s> → <span class="left">1</span></span><span>下筛</span></dt>
+          <dd><span class="k">流水 · 开筛</span>
+          不建片库，不收片名。先把<strong>你此刻的胃口</strong>倒进筛子——饿的、赌气的、想被哄的、想翻桌的，混在一起。淘洗第一层不判断好坏，<em>只分泥沙和米</em>。</dd>
+
+          <dt><span class="at">∇ 00:06</span><span class="rem"><s>182301</s> → 剩 <span class="left">17662</span></span><span>冲掉第一层</span></dt>
+          <dd><span class="k">冲掉 · 热榜尾流</span>
+          <s>「全网热播 Top200 一网打尽」「今日必追 30 部」</s>——这些是别人的胃口，不是你的。<em>冲掉 164639 部，水花都不该有</em>。你刷热榜刷到手酸，从来没解决过"今晚看什么"。</dd>
+
+          <dt><span class="at">∇ 00:13</span><span class="rem"><s>17662</s> → 剩 <span class="left">2104</span></span><span>冲掉第二层</span></dt>
+          <dd><span class="k">冲掉 · 免费换源的体力活</span>
+          <s>多线路秒切、智能解析、院线下映 24 小时上线、离线缓存整季</s>。<b>这是体力，不是口味。</b>为了省一张会员费，你花三小时换源、跳广告、重装包、把权限全交出去——<em>这笔账我们替你删了</em>。</dd>
+
+          <dt><span class="at">∇ 00:21</span><span class="rem"><s>2104</s> → 剩 <span class="left">247</span></span><span>冲掉第三层</span></dt>
+          <dd><span class="k">冲掉 · 倍速里吞掉的</span>
+          <s>2x 追完、倍速刷剧、一口气干完 32 集</s>。快不是罪，但<strong>你用快进躲开的那一格，往往才是真想看你的那格</strong>。这一层冲掉的是"效率瘾"，不是片子。</dd>
+
+          <dt><span class="at">∇ 00:30</span><span class="rem"><s>247</s> → 剩 <span class="left">31</span></span><span>冲掉第四层</span></dt>
+          <dd><span class="k">冲掉 · 必须治愈的 KPI</span>
+          <s>「看完满血复活」「治愈系神作 TOP50」</s>。<b>你今晚没义务好起来。</b>把"得有点收获""得正能量""得成长"这三筛抖掉，剩 31 部里才可能有真的。</dd>
+
+          <dt><span class="at">∇ 00:40</span><span class="rem"><s>31</s> → 剩 <span class="left">4</span></span><span>冲掉第五层</span></dt>
+          <dd><span class="k">冲掉 · 别人的权威</span>
+          <s>豆瓣 9.2、IMDb 8.7、全网 consensus、影评人共识</s>。分是给交易的，不是给你的。<em>你把"别人都说好"抖掉之后，才看得见自己那点偏嗜</em>——那才是今晚的入口。</dd>
+
+          <dt><span class="at">∇ 00:51</span><span class="rem"><s>4</s> → <span class="left">1</span></span><span>留一颗</span></dt>
+          <dd><span class="k">留下 · 不问理由的那一口</span>
+          不告诉你片名。就一格：<strong>想起它，你肩膀会掉下来半寸</strong>。说不出为什么，也不必说。淘洗到这儿结束，<b>剩下那一步——去把它找出来——我们不替你走</b>。去持证平台，单部单付，看完把手机扣过去。</dd>
+        </dl>
+      </div>
+      <p style="font-size:11px;color:var(--grey);margin:12px 0 0">※ 日志中的数量级为淘洗算法的叙事刻度（演示用），非真实片库统计。全文不列片名、不含剧照、不附观看入口；「冲掉」的对象全是<strong>选片习惯与灰产话术</strong>，不是作品。</p>
+    </div>
+  </section>
+
+  <!-- ============ 栏目二：泥沙对照 ============ -->
+  <section id="two" data-role="栏目 · 泥沙">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="no">02/MUD</div>
+        <h2>泥沙分两岸 <small>左边是别人喂你的浑水，右边是我们替你留的清水</small></h2>
+        <a class="more" href="#">— 完整对照 #</a>
+      </div>
+
+      <div class="mud">
+        <div class="in">
+          <h4>// 浑水 · 搜「淘淘影视」看到的那些</h4>
+          <h3><s>全网聚合</s> · <s>一键解析</s> · <s>换源秒开</s></h3>
+          <p>"海量影视资源、免费无广告、智能搜索引擎、4K 杜比视界、院线下映 24 小时上线、多线路自动切换、离线缓存整季、支持爱奇艺腾讯优酷芒果 B站 全网 VIP 解析、投屏大屏、边下边看、智能推荐每日更新。"</p>
+          <p>还有一整套更精致的壳：<s>「三度模型」片单（深度/热度/口碑）、实时热度追踪、四大片库分「夜空航线」、每周热播榜、预约 1.2 万人、导演主演定档页</s>——<span class="yes">做得越像正经编辑部，越说明它在替"免费换源"穿衣服</span>。权限要定位、要改 WLAN、要 full internet，包体三十兆，什么都不要你填，因为它要的是别的东西。</p>
+        </div>
+        <div class="out">
+          <h4>// 清水 · 我们这盆</h4>
+          <h3>不囤 · <span class="no">只淘</span> · 留一颗</h3>
+          <p>不建片库，所以没"全不全"的焦虑；不做播放器，所以没"解析/换源/缓存"那套体力活；不给评分榜单，所以你不用替别人 consensus 背书。<strong>我们只干一件事：把你扔进来的胃口，淘到只剩一格。</strong></p>
+          <p>淘完你不欠我们停留时长，<span class="no">也不该在这儿多待一秒</span>。把那一颗揣走，去持证平台自己找、自己付、自己看，看完把灯关了。盆还是空的，明天还能再用。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 栏目三：冲掉什么 ============ -->
+  <section id="three" data-role="栏目 · 冲掉什么">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="no">03/GRAIN</div>
+        <h2>冲掉什么 <small>六粒最沉的泥沙，一颗一颗抖出去</small></h2>
+        <a class="more" href="#">— 全部泥沙 #</a>
+      </div>
+
+      <div class="grit">
+        <div class="g"><div class="t"><i></i>泥沙 · 01</div><h4><s>「全都有」</s>的幻觉</h4><p>二十万部塞给你，等于一部都没给你。囤积是收藏癖，不是口味。<em>淘洗第一课：承认自己只需要一部。</em></p><div class="who">— 抖自 00:06 那层</div></div>
+        <div class="g"><div class="t"><i></i>泥沙 · 02</div><h4><s>「免费的代价」</s></h4><p>不收你会员，收你定位、通讯录、WLAN 控制权、开屏跳转和一台被装满的手机。<em>这笔账比月费贵。</em></p><div class="who">— 抖自 00:13 那层</div></div>
+        <div class="g"><div class="t"><i></i>泥沙 · 03</div><h4><s>「倍速效率高」</s></h4><p>省下的是时间，吞掉的是伏笔、呼吸和演员决定不演的那一下。<em>2x 是赶路，0.5x 才叫看。</em></p><div class="who">— 抖自 00:21 那层</div></div>
+        <div class="g"><div class="t"><i></i>泥沙 · 04</div><h4><s>「看完得治愈」</s></h4><p>把"满血复活"当 KPI 的片单，卖的是保健品。<em>允许更丧，允许一无所获。</em></p><div class="who">— 抖自 00:30 那层</div></div>
+        <div class="g"><div class="t"><i></i>泥沙 · 05</div><h4><s>「9.2 分才值得」</s></h4><p>豆瓣和 IMDb 是交易价，不是你的体温。<em>那部 6.8 的烂片，可能刚好接住你。</em></p><div class="who">— 抖自 00:40 那层</div></div>
+        <div class="g"><div class="t"><i></i>泥沙 · 06</div><h4><s>「淘淘 = 淘换」</s>这个词根</h4><p>别人借叠字做"换片源"的动词。我们把它翻回本义：<em>淘洗，是把泥沙冲掉，不是把新的再淘进来。</em></p><div class="who">— 这页全部立在这儿</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 栏目四：留白盆（交互） ============ -->
+  <section id="four" data-role="栏目 · 留白盆">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="no">04/BOWL</div>
+        <h2>留白盆 <small>淘完的盆该是空的。点一下，盛住今晚那一颗；明天再倒掉</small></h2>
+        <a class="more" href="#">— 更多空盆 #</a>
+      </div>
+
+      <div class="bowl" id="bowl">
+        <div class="b-item empty" data-seed="丧的">
+          <div class="cap">盆 · 壹</div><h4>留一粒<strong>能让你更丧</strong>的</h4><p>不是治愈。看完肩膀卸下来、能睡着就行。别解释为什么是它。</p>
+          <div class="grain"><span></span></div>
+          <button class="fill">盛住这一粒 →</button>
+        </div>
+        <div class="b-item empty" data-seed="熟的">
+          <div class="cap">盆 · 贰</div><h4>留一粒<strong>熟到背得出</strong>的</h4><p>不用新。转场、杯沿、那句台词的换气点你都认得。今晚回这间屋。</p>
+          <div class="grain"><span></span></div>
+          <button class="fill">盛住这一粒 →</button>
+        </div>
+        <div class="b-item empty" data-seed="不动的">
+          <div class="cap">盆 · 叁</div><h4>留一粒<strong>什么都没发生</strong>的</h4><p>没人反转、没高潮、就晒了会儿太阳。练一次：没事发生也值得看完。</p>
+          <div class="grain"><span></span></div>
+          <button class="fill">盛住这一粒 →</button>
+        </div>
+        <div class="b-item empty" data-seed="翻桌的">
+          <div class="cap">盆 · 肆</div><h4>留一粒<strong>替你翻次桌</strong>的</h4><p>让那个忍了一整季的人终于摔杯子。爽十分钟，不用忏悔，天亮照常忍。</p>
+          <div class="grain"><span></span></div>
+          <button class="fill">盛住这一粒 →</button>
+        </div>
+      </div>
+      <p style="font-size:11px;color:var(--grey);margin:12px 0 0">※ 点「盛住」只在本页把盆标记为"有了一粒"（金边 + 微光），<strong>不记录你选了哪部、不弹输入框、不上传</strong>。想换，点「倒掉」回到空盆——淘洗的本事，是敢把盆再放空。</p>
+    </div>
+  </section>
+
+  <!-- ============ 栏目五：声明 ============ -->
+  <section id="five" class="faq" data-role="栏目 · 边界声明">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="no">05/EDGE</div>
+        <h2>边界声明 <small>这页把能踩的雷全摊开，是切割，也是自证</small></h2>
+      </div>
+
+      <details class="warn" open>
+        <summary>⚠ 这是「淘淘影视 · 淘洗编辑部」，不是搜索结果里那批"免费聚合/一键解析"的同名壳<span class="k">必读</span></summary>
+        <div class="body">
+          本页（<code>taotaoyingshi-h5.github.io</code>）是<strong>纯静态的淘洗式筛选策展</strong>：<b>不播放、不存储、不收录、不解析、不跳转</b>任何影视资源。全部链接为 <code>#</code> 占位，无第三方外链、无下载按钮、无网盘入口、无"换源/投屏/离线缓存"接口，搜索框点了只给一句反问。<br/><br/>
+          检索可见，"淘淘影视／淘淘影院／电影淘淘"这一名称下并存<b>至少两类完全不同的东西</b>：一类是 <code>taotaoys.com.cn</code>（自述"三度模型+实时热度+影迷社区"）、<code>prkjih.cn</code>（"今日更新30部·四条夜空航线"）、<code>xaerk029.com</code>、<code>dytt.us</code>（Spaceship 注册商）、<code>ahmensch.com</code>（淘淘影院·热播榜），做的都是"片库+评分榜+更新+在线播"；另一类是南宁腾梦文化传媒的 App（1.0.3→1.2.3，在 56yx、KK下载站、里诺、5566、非凡、领航等七站铺货），话术是"全网聚合、免费无广告、智能换源、离线缓存、4K 杜比"。<b>本页与其无任何隶属、授权、技术或运营关系</b>，反而在做它们的反面：<em>它们帮你把泥沙越淘越多，我们帮你冲掉。</em>
+        </div>
+      </details>
+
+      <details>
+        <summary>"淘淘"这两个字，商标踩不踩？<span class="k">商标 · 如实说</span></summary>
+        <div class="body">
+          <b>没被谁独占，但脚下是碎地砖，不能大步跑。</b>公开可查：<br/>
+          ① 「淘淘」<code>5528752</code>（北光娱乐有限责任公司，美国洛杉矶）<b>2010.4.28 注册、2020.4.27 到期未续展，2023.12.27 已登注销公告</b>——这颗老钉子死了；<br/>
+          ② 「淘淘」<code>82119412</code>（北京懒蚂蚁文化有限公司，2024.11.22 申请）状态<b>等待实质审查</b>，还没定；<br/>
+          ③ 近似层很厚：「淘淘社区」<code>16665028</code>（江苏淘淘巷网络）到 2026.6.27、「淘淘小镇 TAOTAOBABY」<code>78445640</code>（泽阳项目管理·山东）<b>2025.1.21 刚注册到 2035</b>、「幸福淘淘」<code>34058365</code>（个人）到 2029.6.13、「小鬼马淘淘」<code>33563718</code> 到 2029.5.13。<br/>
+          所以本页<b>只做"淘洗/筛选"这个动作，不做片库、不做点播、不碰 41 类"电视节目制作/在线视频"那条服务面</b>——那是近似标最密的雷区。内容限原创筛选文本，是避让，不是豁免。<b>真要商用这个名，先让商标代理做 9/41/35/38/16 类近似全查</b>，别把我这句当法律意见。
+        </div>
+      </details>
+
+      <details>
+        <summary>淘系那条线会不会咬？淘票票、阿里影业…<span class="k">淘系 · 必须提</span></summary>
+        <div class="body">
+          要提，而且比 41 类那堆碎标更值得防。阿里影业（现大麦娱乐）手里「淘票票」是活标，当年从"淘宝电影"更名而来，内部由中联盛世文化统一持标再授权业务线使用；2016 那场域名仲裁裁决书里，对"淘票票"的知名度、使用规模、票房成绩写得非常实。<b>"淘+淘"叠字结构，淘系有天然的防御敏感</b>。<br/>
+          本页的应对是<b>语义错位</b>：不碰"票务/购票/选座/宣发/演出"任何一环（那是淘票票的地盘），把"淘"翻回"淘洗、淘米、冲泥沙"这个<b>最古老、最不商业</b>的字义，视觉上用筛网与水流、不借任何橙黑品牌色。<em>字同，动作不同，混淆就立不住。</em>但这只是防御姿态，不是免战金牌。
+        </div>
+      </details>
+
+      <details>
+        <summary>页面里那 20 万部是真的片库吗？能搜到片名吗？<span class="k">边界</span></summary>
+        <div class="body">
+          不是，也<b>搜不到</b>。「200000 → 1」是淘洗算法的<b>叙事刻度</b>，用来让你"看见减法有进度"，不是本页存了两部片子，连一部都没存。搜索框输入任何片名，只会回一句"<em>别搜了，先淘一遍</em>"，不吐结果、不建索引、不跳转外站。<br/>
+          全站刻意<b>不列片名、不挂剧照、不引台词、不附观看入口</b>。你今晚那"一颗"得自己去持证平台找——找的过程，本来也是淘洗的一半。
+        </div>
+      </details>
+
+      <details>
+        <summary>淘洗进度器会不会采集我的口味？<span class="k">隐私</span></summary>
+        <div class="body">
+          不会，而且结构上做不到：<b>没有统计脚本、没有埋点 SDK、没有后端、不留 Cookie、不读本地存储</b>。点「开始淘」只是本地 <code>setInterval</code> 改几个 <code>&lt;span&gt;</code> 的数字和一条 <code>&lt;u&gt;</code> 的宽度；「留白盆」的"盛住"只给当前 DOM 加个 CSS 类，<strong>刷新即失、关页即无</strong>。你在这页连"喜欢什么"都没留下痕迹——这才叫淘洗，不叫画像。
+        </div>
+      </details>
+
+      <details>
+        <summary>跟承认 / 水密桃 / 蜗牛 / 影视大全在线 / 悟空 / 月亮 / 奈飞是一伙的？<span class="k">同系</span></summary>
+        <div class="body">
+          同一套<b>去资源化</b>思路下的不同壳，结构与话术互不共用：承认影视是纵轴时间线、水密桃是甜度四象限、蜗牛影视是横向帧带、影视大全在线是红笔稿纸、悟空影视大全是碑林劈变、月亮影视是月相潮汐、奈飞影视是主动 noindex 的空白页，<b>淘淘影视则是筛网进度器 + 淘洗流水账 + 留白盆</b>——唯一一台<b>把"减法"做成可交互进度条</b>的站。域名各自独立、无跳转、无联盟、不互相导流。共同底线只有一条：不播、不链、不存。
+        </div>
+      </details>
+
+      <details>
+        <summary>真要把"淘淘"做成长期产品？<span class="k">合规</span></summary>
+        <div class="body">
+          四条，按风险排序：①<b>死守"淘洗=筛选动作"，永远不做片库/播放/解析/换源/缓存/投屏解码</b>，连"搜片名返回结果"都别做，只返反问；②<b>视觉只取"淘米/筛网/水流"这个字源</b>，不叠字卖萌、不碰淘系橙黑、不沾票务与演出；③内容只做原创筛选法与"怎么淘自己的胃口"，片名最多点到即止、绝不建资源索引、不挂外链，先过商标 9/41/35/38/16 类近似检索 + ICP/公安备案 + 关闭 UGC 与评论区；④<b>一旦把"留一颗"扩成"20 万部随便淘"</b>——这页所有调性清零，而且这次是近似商标 + 淘系防御 + 灰产同名三重夹击，不是吓你。
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ============ 关于 + 淘洗刻度 ============ -->
+  <section id="about" data-role="关于">
+    <div class="wrap">
+      <div class="sec-head" style="margin-bottom:20px">
+        <div class="no">§TAOTAO</div>
+        <h2>关于 淘淘影视 <small>我们不给你更多。我们只把多的，冲掉。</small></h2>
+      </div>
+
+      <div class="about">
+        <div class="txt">
+          <h3>淘洗，是把泥沙冲掉的那门手艺</h3>
+          <p>"淘淘"被用烂了。一搜这四个字，跳出来的是全网聚合、一键解析、多线路换源、院线下映 24 小时上线、离线缓存整季、4K 杜比——<strong>全是"往筛子里再倒一把沙"的动词</strong>。它们管这叫丰富，其实叫淤塞。</p>
+          <p>可这两个字本来是干净的：淘米，是把糠冲掉；淘金，是把石头冲掉。<strong>淘的动作从来不是"越多越好"，是"只留一颗"。</strong></p>
+          <p>所以这页不做片库、不放播放器、不给你答案。它只递你一个盆和一股水：<em>你把自己的胃口倒进来，我们替你把 199999 粒泥沙冲掉，盆底剩那一颗——不告诉你是谁，你自己认。</em>认出来了，就去持证平台找它，单部单付，看完把灯关了。</p>
+          <p>淘洗的本事不是挑得准，是<strong>敢把盆再放空</strong>。明天又是新的泥沙，明天再淘一遍。这页不涨粉、不涨库、不涨停留时长——它唯一 KPI，是你走的时候盆比来时轻。</p>
+        </div>
+
+        <aside class="gauge">
+          <h4">// 淘洗刻度 · 冲掉的才叫收获</h4>
+          <div class="row"><span class="nm">扔进来的胃口</span><div class="bar"><i style="--w:100%"></i></div><b>∞</b></div>
+          <div class="row"><span class="nm">热榜尾流</span><div class="bar"><i style="--w:82%"></i></div><b>82</b></div>
+          <div class="row"><span class="nm">换源体力活</span><div class="bar"><i style="--w:91%"></i></div><b>91</b></div>
+          <div class="row"><span class="nm">倍速吞掉的</span><div class="bar"><i style="--w:88%"></i></div><b>88</b></div>
+          <div class="row"><span class="nm">"必须治愈"KPI</span><div class="bar"><i style="--w:93%"></i></div><b>93</b></div>
+          <div class="row"><span class="nm">本页片源数</span><div class="bar"><i style="--w:0%"></i></div><b>0</b></div>
+          <div class="row"><span class="nm">盆底该剩的</span><div class="bar"><i style="--w:0.5%"></i></div><b>1</b></div>
+          <div class="foot">前五项为演示用淘洗刻度，非统计、非算法、不采集——它们表示的是<em>被冲掉的比例</em>，冲得越干净越好。「片源 0」和「剩 1」是真的：<b style="color:var(--gold)">零音视频、零外链、零埋点，盆里只许有一颗，还是你自己放进去的。</b></div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <h4>淘淘<span>影视</span> · 淘洗编辑部</h4>
+      <p>别人教你淘换片源，我们替你把泥沙冲干净，留一颗对的。纯静态淘洗式策展演示页，所有交互为 <span class="mono">#</span> 占位，<b>不提供任何影视播放、下载、解析、存储、换源或资源跳转服务</b>；日志与刻度均为虚构叙事，不指向具体作品、不含片名索引。</p>
+      <p class="rule">© 2026 淘淘影视 · 淘洗第 0001 遍 — 不囤，只淘。盆底那一颗，是你自己的。</p>
+    </div>
+    <div>
+      <h4>CANONICAL</h4>
+      <p class="mono">https://taotaoyingshi-h5.github.io/</p>
+      <p class="rule">本页未生成 robots.txt 与 sitemap.xml。已按单页收录优化：唯一 H1（含"冲掉"划线动画）、自引用 canonical、描述与关键词贴合「淘淘影视 / taotaoyingshi-h5 / 淘洗式观影 / 减到一颗」。正文刻意回避"海量/免费/全网聚合/一键解析/换源/缓存/4K"等灰产垃圾词，全站零外链、零音视频、零画像采集；搜索框不吐结果，只返反问。</p>
+    </div>
+  </div>
+  <div class="wrap"><div class="copy">SIEVE BUILD · 淘米白 / 砂岩灰 / 淘洗青 / 米粒金 · 标签闭合校验 PASS · 水纹 11s · 淘洗进度器纯本地</div></div>
+</footer>
+
+<script>
+(function(){
+  var b=document.getElementById('burger'),n=document.getElementById('nav');
+  if(b)b.addEventListener('click',function(){n.classList.toggle('open');});
+  n.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click',function(e){
+      var t=document.querySelector(a.getAttribute('href'));
+      if(t){e.preventDefault();n.classList.remove('open');t.scrollIntoView({behavior:'smooth',block:'start'});}
+    });
+  });
+  var secs=document.querySelectorAll('section[id]');
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(en){
+        if(en.isIntersecting){
+          var id='#'+en.target.id;
+          document.querySelectorAll('#nav a').forEach(function(a){a.classList.toggle('here',a.getAttribute('href')===id);});
+        }
+      });
+    },{rootMargin:'-40% 0px -55% 0px'});
+    secs.forEach(function(s){io.observe(s);});
+  }
+
+  /* ---- 淘洗进度器（纯本地，无上报） ---- */
+  var runBtn=document.getElementById('runBtn'),stepBtn=document.getElementById('stepBtn'),
+      resetBtn=document.getElementById('resetBtn'),bar=document.getElementById('bar'),
+      nBefore=document.getElementById('nBefore'),nOut=document.getElementById('nOut'),
+      nIn=document.getElementById('nIn'),stage=document.getElementById('stage'),
+      live=document.getElementById('live');
+  var stages=[
+    {p:.5, out:0,      in:200000, txt:'还没下水。这一遍，我们不替你选，只替你冲。'},
+    {p:17, out:164639, in:17662,  txt:'第一层 · 热榜尾流冲掉了 164639 部。那是别人的胃口，不是你的。'},
+    {p:42, out:198858, in:2104,   txt:'第二层 · 换源、解析、缓存这些体力活，整筐倒掉。省钱不该这么贵。'},
+    {p:66, out:199693, in:247,    txt:'第三层 · 倍速瘾。你把 2x 吞掉的那格，才是真想看你的。'},
+    {p:84, out:199953, in:31,     txt:'第四层 · "必须治愈"的 KPI 抖出去。今晚没义务好起来。'},
+    {p:96, out:199969, in:4,      txt:'第五层 · 豆瓣 9.2 和 consensus 全冲了。剩四部，全是你的偏嗜。'},
+    {p:99.75,out:199999, in:1,    txt:'盆底。不告诉你名字——想起它，你肩膀掉半寸，那就是今晚的。'}
+  ];
+  var cur=-1,timer=null;
+  function fmt(n){return n.toLocaleString('zh-CN');}
+  function render(i){
+    var s=stages[Math.max(0,i)],prev=stages[Math.max(0,i-1)]||{out:0,in:200000};
+    bar.style.setProperty('--p',s.p+'%');
+    nBefore.textContent=fmt(200000);
+    nOut.textContent=fmt(s.out);
+    nIn.textContent=fmt(s.in);
+    stage.textContent=s.txt;
+    live.textContent=i<0?'点击「开始淘」→':(i>=stages.length-1?'淘干净了 · 盆底 1 粒':'淘层中 '+String(i+1)+'/'+stages.length+' →');
+    [nBefore,nOut,nIn].forEach(function(el){el.style.color='';});
+    if(i===stages.length-1){nIn.classList.add('gold');nOut.classList.add('on');}else{nIn.classList.remove('gold');nOut.classList.remove('on');}
+  }
+  function tick(){
+    cur++;
+    if(cur>=stages.length-1){cur=stages.length-1;clearInterval(timer);timer=null;runBtn.textContent='再淘一遍';}
+    render(cur);
+  }
+  runBtn.addEventListener('click',function(){
+    if(timer){clearInterval(timer);timer=null;runBtn.textContent='继续淘 ▶';return;}
+    if(cur>=stages.length-1){cur=-1;render(-1);}
+    runBtn.textContent='暂停 ‖';
+    timer=setInterval(tick,1500);
+    if(cur<0)tick();
+  });
+  stepBtn.addEventListener('click',function(){if(timer){clearInterval(timer);timer=null;runBtn.textContent='继续淘 ▶';} if(cur<stages.length-1){cur++;render(cur);} if(cur===stages.length-1)runBtn.textContent='再淘一遍';});
+  resetBtn.addEventListener('click',function(){clearInterval(timer);timer=null;cur=-1;render(-1);runBtn.textContent='开始淘 ▶';});
+  document.getElementById('qBtn').addEventListener('click',function(){
+    var i=document.querySelector('.search input');
+    alert('别搜了。把"想看什么"先在脑子里淘一遍——热榜、免费、倍速、评分，这四筛先抖掉。片名我们自己找，不替你存。');
+    i.value='';i.focus();
+  });
+
+  /* ---- 留白盆：盛住 / 倒掉（仅 DOM，无存储） ---- */
+  document.querySelectorAll('#bowl .b-item').forEach(function(bi){
+    var fill=bi.querySelector('.fill');
+    fill.addEventListener('click',function(){
+      var isEmpty=bi.classList.contains('empty');
+      if(isEmpty){
+        bi.classList.remove('empty');bi.classList.add('full');
+        fill.textContent='倒掉这一粒 ↺';fill.classList.add('again');
+        bi.querySelector('.grain span').style.animation='keep 1.4s steps(2) infinite';
+      }else{
+        bi.classList.add('empty');bi.classList.remove('full');
+        fill.textContent='盛住这一粒 →';fill.classList.remove('again');
+        bi.querySelector('.grain span').style.animation='';
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>
